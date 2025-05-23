@@ -3,8 +3,7 @@ import bcrypt from 'bcryptjs'
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import nodemailer from 'nodemailer';
-import CrewSchedule from '../models/crewSchedule.js';
-import Request from '../models/request.js';
+// import Request from '../models/request.js';
 
 dotenv.config();
 
@@ -128,10 +127,10 @@ const changeSchedule = async (payload = {}) => {
     // if (!employee_ID || !assignedFlights || !updateFields) {
     //   return res.status(400).json({ error: "Missing required fields" });
     // }
-	await Request.updateOne(
-		{ _id: id }, // Find the request by ID
-		{ $set: { status } } // Update status field
-	)
+	// await Request.updateOne(
+	// 	{ _id: id }, // Find the request by ID
+	// 	{ $set: { status } } // Update status field
+	// )
    
 		return "Schedule change request submitted successfully";
 	} catch (error) {
@@ -146,17 +145,17 @@ const requestChangeSchedule = async (payload = {}) => {
 		console.log('requestChangeSchedule', payload)
 		const { employee_ID, flightId, reason, start_date, end_date, status, name, leaveType } = payload;
 
-		const request = new Request({
-			employee_ID,
-			name,
-			leaveType,
-			flightId,
-			reason,
-			start_date,
-			end_date,
-			status
-		});
-		 await request.save();
+		// const request = new Request({
+		// 	employee_ID,
+		// 	name,
+		// 	leaveType,
+		// 	flightId,
+		// 	reason,
+		// 	start_date,
+		// 	end_date,
+		// 	status
+		// });
+		//  await request.save();
 		return "Schedule change request submitted successfully";
 
 	} catch (error) {
@@ -178,9 +177,9 @@ const getRequestSchedule = async (payload = {}) => {
 			filter.employee_ID = id;
 		}
 	
-		const requests = await Request.find(filter); 
+		// const requests = await Request.find(filter); 
 
-		return requests;
+		return "requests";
 
 	} catch (error) {
 		console.log('error', error)
@@ -251,67 +250,67 @@ const getCrewSchedule = async (payload = {}) => {
 	// 	  }
 	// 	}
 	//   ]);
-	const crewData = await CrewSchedule.aggregate([
-		{
-		  $match: { employee_ID: payload } // Filter crew data for the given employee
-		},
-		{
-		  $lookup: {
-			from: "flightschedules", // Collection for flight schedules
-			localField: "assignedFlights", // Field in CrewSchedule (array)
-			foreignField: "flightId", // Field in FlightSchedule
-			as: "flightScheduleDetails" // Stores matched flight schedule data
-		  }
-		},
-		{
-		  $lookup: {
-			from: "flights", // Collection for flight data
-			localField: "assignedFlights", // Field in CrewSchedule (array)
-			foreignField: "flightId", // Field in Flight
-			as: "flightDetails" // Stores matched flight data
-		  }
-		},
-		{
-		  $project: {
-			_id: 1,
-			employee_ID: 1,
-			assignedFlights: 1,
-			mergedFlights: {
-			  $map: {
-				input: "$assignedFlights",
-				as: "flightId",
-				in: {
-				  flightId: "$$flightId",
-				  flightSchedule: {
-					$arrayElemAt: [
-					  {
-						$filter: {
-						  input: "$flightScheduleDetails",
-						  as: "fs",
-						  cond: { $eq: ["$$flightId", "$$fs.flightId"] }
-						}
-					  },
-					  0
-					]
-				  },
-				  flightData: {
-					$arrayElemAt: [
-					  {
-						$filter: {
-						  input: "$flightDetails",
-						  as: "f",
-						  cond: { $eq: ["$$flightId", "$$f.flightId"] }
-						}
-					  },
-					  0
-					]
-				  }
-				}
-			  }
-			}
-		  }
-		}
-	  ]);
+	// const crewData = await CrewSchedule.aggregate([
+	// 	{
+	// 	  $match: { employee_ID: payload } // Filter crew data for the given employee
+	// 	},
+	// 	{
+	// 	  $lookup: {
+	// 		from: "flightschedules", // Collection for flight schedules
+	// 		localField: "assignedFlights", // Field in CrewSchedule (array)
+	// 		foreignField: "flightId", // Field in FlightSchedule
+	// 		as: "flightScheduleDetails" // Stores matched flight schedule data
+	// 	  }
+	// 	},
+	// 	{
+	// 	  $lookup: {
+	// 		from: "flights", // Collection for flight data
+	// 		localField: "assignedFlights", // Field in CrewSchedule (array)
+	// 		foreignField: "flightId", // Field in Flight
+	// 		as: "flightDetails" // Stores matched flight data
+	// 	  }
+	// 	},
+	// 	{
+	// 	  $project: {
+	// 		_id: 1,
+	// 		employee_ID: 1,
+	// 		assignedFlights: 1,
+	// 		mergedFlights: {
+	// 		  $map: {
+	// 			input: "$assignedFlights",
+	// 			as: "flightId",
+	// 			in: {
+	// 			  flightId: "$$flightId",
+	// 			  flightSchedule: {
+	// 				$arrayElemAt: [
+	// 				  {
+	// 					$filter: {
+	// 					  input: "$flightScheduleDetails",
+	// 					  as: "fs",
+	// 					  cond: { $eq: ["$$flightId", "$$fs.flightId"] }
+	// 					}
+	// 				  },
+	// 				  0
+	// 				]
+	// 			  },
+	// 			  flightData: {
+	// 				$arrayElemAt: [
+	// 				  {
+	// 					$filter: {
+	// 					  input: "$flightDetails",
+	// 					  as: "f",
+	// 					  cond: { $eq: ["$$flightId", "$$f.flightId"] }
+	// 					}
+	// 				  },
+	// 				  0
+	// 				]
+	// 			  }
+	// 			}
+	// 		  }
+	// 		}
+	// 	  }
+	// 	}
+	//   ]);
 	return crewData;	
 }
 

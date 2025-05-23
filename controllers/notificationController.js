@@ -1,6 +1,5 @@
 import { Router } from 'express';
 import { makeResponse, responseMessages, statusCodes } from '../helpers/response/index.js';
-import { getScheduleById, saveSchedule, getAllSchedule } from '../services/schedule.js';
 import { Notification } from '../models/notification.js';
 
 
