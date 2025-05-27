@@ -16,6 +16,10 @@ import {
 import fs from 'fs';
 import { User } from '../models/index.js';
 
+import dotenv from 'dotenv';
+dotenv.config();
+
+
 const router = Router();
 
 //Response messages

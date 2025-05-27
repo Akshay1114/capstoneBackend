@@ -3,17 +3,17 @@ import cors from 'cors';
 import http from 'http';
 import { Server } from 'socket.io';
 import dotenv from 'dotenv';
-import {connectDB} from './loaders/db/index.js';
+// import {connectDB} from './loaders/db/index.js';
 import { router } from './routes/index.js'
 import bodyParser from 'body-parser';
 import { Notification } from './models/notification.js';
 import axios from 'axios';
-import passport from 'passport';
-import OAuth2Strategy from 'passport-oauth2';
+// import passport from 'passport';
+// import OAuth2Strategy from 'passport-oauth2';
 // const querystring = require('querystring');
 import querystring from 'querystring';
 dotenv.config();
-connectDB()
+// connectDB()
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
@@ -119,19 +119,19 @@ io.on("connection", (socket) => {
   });
 });
 
-app.use(passport.initialize());
-passport.use(new OAuth2Strategy({
-  authorizationURL: 'https://www.fitbit.com/oauth2/authorize',
-  tokenURL: 'https://api.fitbit.com/oauth2/token',
-  clientID: process.env.FITBIT_CLIENT_ID,
-  clientSecret: process.env.FITBIT_CLIENT_SECRET,
-  callbackURL: "http://localhost:5173/auth/fitbit/callback",
-  scope: ['sleep', 'activity', 'heartrate', 'profile']
-}, (accessToken, refreshToken, profile, done) => {
-  return done(null, { accessToken, refreshToken, profile });
-}));
+// app.use(passport.initialize());
+// passport.use(new OAuth2Strategy({
+//   authorizationURL: 'https://www.fitbit.com/oauth2/authorize',
+//   tokenURL: 'https://api.fitbit.com/oauth2/token',
+//   clientID: process.env.FITBIT_CLIENT_ID,
+//   clientSecret: process.env.FITBIT_CLIENT_SECRET,
+//   callbackURL: "http://localhost:5173/auth/fitbit/callback",
+//   scope: ['sleep', 'activity', 'heartrate', 'profile']
+// }, (accessToken, refreshToken, profile, done) => {
+//   return done(null, { accessToken, refreshToken, profile });
+// }));
 
-app.use(passport.initialize());
+// app.use(passport.initialize());
 
 // Redirect user to Fitbit for authentication
 // app.get('/auth/fitbit', passport.authenticate('oauth2'));
@@ -210,7 +210,7 @@ app.use(passport.initialize());
 
 app.use('/api/', router);
 
-const PORT = process.env.PORT || 5001;
+const PORT = process.env.PORT || 5002;
 console.log('PORT', PORT)
 server.listen(PORT, () => {
 	console.log('Server is listening on port ', PORT);
@@ -218,3 +218,13 @@ server.listen(PORT, () => {
 // app.listen(PORT, () => {
 // 	console.log('Server is listening on port ', 5001);
 // });
+
+app.post('/api/signin', (req, res) => {
+  const { email, password } = req.body;
+
+  if (email === 'capstone@gmail.com' && password === '123456') {
+    return res.json({ message: 'Login successful', token: 'mock-token-123' });
+  }
+
+  return res.status(401).json({ message: 'Invalid credentials' });
+});
