@@ -18,8 +18,7 @@ const addUser = async (payload = {}) => {
             throw new Error("Email already in use");
         }
 
-		const generateEmployeeId = Math.floor(100000 + Math.random() * 900000);
-		payload.employee_ID = generateEmployeeId;
+	
         // Hash password
 		// generate a one time password for user complex password
 		const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -32,7 +31,8 @@ const addUser = async (payload = {}) => {
 		console.log('otp', otp)
 		payload.testPass = otp;
         const salt = await bcrypt.genSalt(SALT_WORK_FACTOR);
-        otp = await bcrypt.hash(otp, salt);
+        // otp = await bcrypt.hash(payload.password, salt);
+       let hashPass = await bcrypt.hash(payload.password, salt);
 
 		const transporter = nodemailer.createTransport({
 			host: "smtp.gmail.com", 
@@ -47,23 +47,23 @@ const addUser = async (payload = {}) => {
 
 		const resetLink = `https://ip-frontend-pi.vercel.app/reset-password?email=${encodeURIComponent(payload.email)}`;
 
-		const mailOptions = {
-			from: '"Wings Wise',
-			to: payload.email,
-			subject: "Welcome to Wings Wise",
-			text: "Hello! This is a test email sent using SMTP in Node.js.",
-			html: `<h3>Hello!</h3><p> Welcome to team Here is your one time password <strong>${oneTpass}</strond>  and Your employee ID : <strong>${generateEmployeeId}</strong> here is the link to change your password ${resetLink} .</p>`
-		};
+		// const mailOptions = {
+		// 	from: '"Wings Wise',
+		// 	to: payload.email,
+		// 	subject: "Welcome to Wings Wise",
+		// 	text: "Hello! This is a test email sent using SMTP in Node.js.",
+		// 	html: `<h3>Hello!</h3><p> Welcome to team Here is your one time password <strong>${oneTpass}</strond>  and Your employee ID : <strong>${generateEmployeeId}</strong> here is the link to change your password ${resetLink} .</p>`
+		// };
 		
 		
-		transporter.sendMail(mailOptions, (error, info) => {
-			if (error) {
-				console.error("Error sending email:", error);
-			} else {
-				console.log("Email sent:", info.response);
-			}
-		});
-		payload.password = otp;
+		// transporter.sendMail(mailOptions, (error, info) => {
+		// 	if (error) {
+		// 		console.error("Error sending email:", error);
+		// 	} else {
+		// 		console.log("Email sent:", info.response);
+		// 	}
+		// });
+		payload.password = hashPass;
         const user = new User(payload);
         return await user.save();
 		// return otp

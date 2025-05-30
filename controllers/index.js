@@ -29,7 +29,7 @@ const { RECORD_CREATED, RECORD_ALREADY_EXISTS, SUCCESS, BAD_REQUEST } = statusCo
 
 router.post('/saveCrew', async(req, res) => {
 
-  console.log("ENTER saveCrew")
+  console.log("ENTER saveCrew ==>>")
   // const flightsData = JSON.parse(fs.readFileSync('./flightCollection.json', 'utf-8'));
   // const flightsData = JSON.parse(fs.readFileSync('./WingJSon/flight.json', 'utf-8'));
   const flightsData = JSON.parse(fs.readFileSync('./WingJSon/pilot.json', 'utf-8'));
@@ -61,7 +61,7 @@ router.put('/updateUser', async(req, res) => {
 
 //Add User
 router.post('/signup', async(req, res) => {
-  console.log("ENTER HERE IN SIGNUP")
+  console.log("ENTER HERE IN SIGNUP ==>>>>")
   addUser(req.body)
             .then(async user => {
               return makeResponse(
