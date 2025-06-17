@@ -18,7 +18,11 @@ const userSchema = mongoose.Schema({
     type: String,
     required: true
   },
-
+  role:{
+    type: String,
+    required: true,
+    enum: ['user', 'family']
+  },
   isDeleted: {
     type: Boolean,
     default: false

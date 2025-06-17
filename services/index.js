@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs'
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import nodemailer from 'nodemailer';
+// import Profile from '../models/profile.js';
 // import Request from '../models/request.js';
 
 dotenv.config();
@@ -233,6 +234,48 @@ const changePassword = async (payload = {}) => {
 	return "Password changed successfully";
 }
 
+// get profile
+const getProfile = async (payload = {}) => {
+	const getData = await User.findOne({
+		email: payload.email
+	})
+	if (!getData) {
+		throw new Error("User not found");
+	}
+	console.log('getData', getData)
+	return getData;
+}
+
+// edit profile
+const editProfile = async (payload = {}) => {
+	const { email, name, phone, image } = payload;
+  
+	if (!email) {
+	  throw new Error("Email is required to update profile.");
+	}
+  
+	const filter = { email: email };
+	const update = { $set: { name, phone, image } };
+  
+	try {
+	  // Assuming `db` is your MongoDB collection instance
+	  const result = await db.updateOne(filter, update);
+  
+	  if (result.matchedCount === 0) {
+		throw new Error("No profile found with the provided email.");
+	  }
+  
+	  if (result.modifiedCount === 0) {
+		return { message: "Profile data is already up to date." };
+	  }
+  
+	  return { message: "Profile updated successfully." };
+	} catch (error) {
+	  console.error("Error updating profile:", error);
+	  throw new Error("Failed to update profile.");
+	}
+  };
+
 const getCrewSchedule = async (payload = {}) => {
 	// const crewData = await CrewSchedule.find(
 	// 	{ employee_ID: payload }
@@ -370,5 +413,5 @@ const addDummy = async (payload = {}) => {
 	return await user.save();
 }
 
-export { addUser, findUserById, updateUser,changeSchedule,requestChangeSchedule,addDummy,
+export { addUser, findUserById, updateUser,changeSchedule,requestChangeSchedule,addDummy,getProfile,editProfile,
 	 deleteUser, findAllUsers, getUsersCount, changeStatus, updateDeviceToken, loginUser, changePassword, getCrewSchedule, getRequestSchedule };

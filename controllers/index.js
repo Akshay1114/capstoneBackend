@@ -11,7 +11,9 @@ import {
   updateUser,
   getCrewSchedule,
   requestChangeSchedule,
-  getRequestSchedule
+  getRequestSchedule,
+  getProfile,
+  editProfile
 } from '../services/index.js';
 import fs from 'fs';
 import { User } from '../models/index.js';
@@ -139,6 +141,70 @@ router.post('/login', async (req, res) => {
     }
   
 });
+
+//userProfile
+router.post('/userProfile', async (req, res) => {
+  console.log("ENTER HERE IN USER PROFILE")
+  try{
+    console.log(req.body)
+    getProfile(req.body)
+      .then(async user => {
+        return makeResponse(
+          res,
+          RECORD_CREATED,
+          true,
+          FETCH_USERS,
+          user
+        );
+      })
+      .catch(async error => {
+        return makeResponse(
+          res,
+          RECORD_ALREADY_EXISTS,
+          false,
+          error.message
+        );
+      });
+  } catch (error) {
+    return makeResponse(
+      res,
+      RECORD_ALREADY_EXISTS,
+      false,
+      error.message
+    );
+  }
+})
+
+router.post('/editProfile', async (req, res) => {
+  console.log("ENTER HERE IN EDIT PROFILE")
+  try{
+    editProfile(req.body)
+      .then(async user => {
+        return makeResponse(
+          res,
+          RECORD_CREATED,
+          true,
+          USER_ADDED,
+          user
+        );
+      })
+      .catch(async error => {
+        return makeResponse(
+          res,
+          RECORD_ALREADY_EXISTS,
+          false,
+          error.message
+        );
+      });
+  } catch (error) {
+    return makeResponse(
+      res,
+      RECORD_ALREADY_EXISTS,
+      false,
+      error.message
+    );
+  }
+})
 
 // request to change schedule save request
 router.post('/requestChangeSchedule', async (req, res) => {
