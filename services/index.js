@@ -258,7 +258,7 @@ const editProfile = async (payload = {}) => {
 	const update = { $set: { name, phone, image } };
   
 	try {
-	  // Assuming `db` is your MongoDB collection instance
+	 
 	  const result = await db.updateOne(filter, update);
   
 	  if (result.matchedCount === 0) {
