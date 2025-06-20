@@ -5,7 +5,7 @@ import fs from 'fs';
 import { User } from '../models/index.js';
 
 import dotenv from 'dotenv';
-import { saveBP } from '../services/health.js';
+import { saveBP, getBpData } from '../services/health.js';
 dotenv.config();
 
 
@@ -45,6 +45,30 @@ router.post('/bp', async(req, res) => {
     );
   });
 });
+
+router.get('/bp', async(req, res) => {
+  console.log("ENTER getBP ==>>")
+  
+  getBpData(req.query.id)
+  .then(async data => {
+    return makeResponse(
+      res,
+      SUCCESS,
+      true,
+      FETCH_USERS,
+      data
+    );
+  })
+  .catch(async error => {
+    return makeResponse(
+      res,
+      BAD_REQUEST,
+      false,
+      error.message
+    );
+  });
+}
+);
 
 
 

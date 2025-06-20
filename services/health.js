@@ -24,4 +24,13 @@ const saveBP = async (payload = {}) => {
       }
 }
 
-export { saveBP };
+const getBpData = async (userID) => {
+    try {
+        const bpData = await BloodPressure.find({ userID }).sort({ datetime: -1 });
+        return bpData;
+      } catch (error) {
+        console.error('Error fetching blood pressure data:', error);
+        throw new Error('Internal server error');
+      }
+}
+export { saveBP, getBpData };
