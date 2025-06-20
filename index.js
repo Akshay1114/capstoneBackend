@@ -3,7 +3,7 @@ import cors from 'cors';
 import http from 'http';
 import { Server } from 'socket.io';
 import dotenv from 'dotenv';
-// import {connectDB} from './loaders/db/index.js';
+import {connectDB} from './loaders/db/index.js';
 import { router } from './routes/index.js'
 import bodyParser from 'body-parser';
 import { Notification } from './models/notification.js';
@@ -13,7 +13,7 @@ import axios from 'axios';
 // const querystring = require('querystring');
 import querystring from 'querystring';
 dotenv.config();
-// connectDB()
+connectDB()
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {

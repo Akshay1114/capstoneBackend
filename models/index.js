@@ -23,6 +23,11 @@ const userSchema = mongoose.Schema({
     required: true,
     enum: ['user', 'family']
   },
+  image: {
+    type: String,
+    default: ''
+  },
+  
   isDeleted: {
     type: Boolean,
     default: false
