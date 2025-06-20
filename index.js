@@ -9,6 +9,7 @@ import { router } from './routes/index.js';
 import { authRoutes } from './routes/authRoutes.js';
 import { Notification } from './models/notification.js';
 import mongoose from 'mongoose';
+import kickRoutes from "./routes/kickRoutes.js";
 
 const app = express();
 const server = http.createServer(app);
@@ -22,7 +23,9 @@ app.use(cors(corsOptions));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use("/api/auth", authRoutes);
+app.use("/api/kicks", kickRoutes);
 app.use("/api/", router);
+
 
 // ✅ Socket.IO Setup
 const io = new Server(server, {
