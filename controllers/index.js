@@ -61,29 +61,29 @@ router.put('/updateUser', async(req, res) => {
 }
 );
 
-//Add User
-router.post('/signup', async(req, res) => {
-  console.log("ENTER HERE IN SIGNUP ==>>>>")
-  addUser(req.body)
-            .then(async user => {
-              return makeResponse(
-                res,
-                RECORD_CREATED,
-                true,
-                USER_ADDED,
-                user
-              );
-            })
-            .catch(async error => {
-              return makeResponse(
-                res,
-                RECORD_ALREADY_EXISTS,
-                false,
-                error.message
-              );
-            });
+// //Add User
+// router.post('/signup', async(req, res) => {
+//   console.log("ENTER HERE IN SIGNUP ==>>>>")
+//   addUser(req.body)
+//             .then(async user => {
+//               return makeResponse(
+//                 res,
+//                 RECORD_CREATED,
+//                 true,
+//                 USER_ADDED,
+//                 user
+//               );
+//             })
+//             .catch(async error => {
+//               return makeResponse(
+//                 res,
+//                 RECORD_ALREADY_EXISTS,
+//                 false,
+//                 error.message
+//               );
+//             });
  
-});
+// });
 
 router.get('/crewSchedule', async(req, res) => {
   console.log(req.query)
