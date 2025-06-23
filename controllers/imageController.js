@@ -15,7 +15,7 @@ const { RECORD_CREATED, RECORD_ALREADY_EXISTS, SUCCESS, BAD_REQUEST } = statusCo
 
 
 const SUPABASE_URL = 'https://loqjctqlroqrvxfoqdjr.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxvcWpjdHFscm9xcnZ4Zm9xZGpyIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1MDQ2NzU0OSwiZXhwIjoyMDY2MDQzNTQ5fQ.WXqUyU6JOeBeK-4a4Y7yRCUDLWRQc2sZ_lSIuBGbrAo';
+const SUPABASE_KEY = process.env.SERVICE_ROLE;
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 router.post('/', async (req, res) => {
