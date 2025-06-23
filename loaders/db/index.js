@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 dotenv.config();
 // const uri = '';
 const uri = process.env.URI;
-console.log('uri', uri);
+console.log('uri', process.env.PORT);
 const connectDB = async () => {
   console.log('Connecting to DB');
   mongoose.connect(uri, {

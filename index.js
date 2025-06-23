@@ -21,6 +21,7 @@ import kickRoutes from "./routes/kickRoutes.js";
 
 const app = express();
 const server = http.createServer(app);
+app.use(express.json({ limit: '100mb' }));
 
 const corsOptions = {
   origin: '*',
@@ -30,9 +31,9 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use("/api/", router);
 app.use("/api/auth", authRoutes);
 app.use("/api/kicks", kickRoutes);
-app.use("/api/", router);
 
 
 // ✅ Socket.IO Setup
@@ -86,21 +87,25 @@ io.on("connection", (socket) => {
   });
 });
 
-mongoose
-  .connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => {
-    console.log("✅ MongoDB Atlas connected successfully");
-    server.listen(process.env.PORT || 5000, () => {
-      console.log("🚀 Server running on port", process.env.PORT || 5000);
-    });
-  })
-  .catch((err) => {
-    console.error("❌ MongoDB connection error:", err.message);
-  });
-
+// mongoose
+//   .connect(process.env.MONGO_URI, {
+//     useNewUrlParser: true,
+//     useUnifiedTopology: true,
+//   })
+//   .then(() => {
+//     console.log("✅ MongoDB Atlas connected successfully");
+//     server.listen(process.env.PORT || 5000, () => {
+//       console.log("🚀 Server running on port", process.env.PORT || 5000);
+//     });
+//   })
+//   .catch((err) => {
+//     console.error("❌ MongoDB connection error:", err.message);
+//   });
+const PORT = process.env.PORT || 5001;
+console.log('PORT', PORT)
+server.listen(PORT, () => {
+	console.log('Server is listening on port ', PORT);
+});
 // -----------------------------------------
 // 🟡 FITBIT OAUTH2 INTEGRATION (COMMENTED)
 // -----------------------------------------
