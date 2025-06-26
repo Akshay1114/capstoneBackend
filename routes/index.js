@@ -1,5 +1,6 @@
 import { Router } from 'express';
-
+import dotenv from 'dotenv';
+dotenv.config()
 import { userController } from '../controllers/index.js';
 import { notificationController } from '../controllers/notificationController.js';
 import { healthController } from '../controllers/healthController.js';

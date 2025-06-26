@@ -7,6 +7,10 @@ const bloodPressureSchema = new mongoose.Schema({
   diastolic: { type: String },
   status :{ type: String },
   systolic:{type : String},
+  userID: {
+    type: String, // ✅ Accept string ID
+    required: true,
+  },
 });
 
 const BloodPressure = mongoose.model('BloodPressure', bloodPressureSchema);
