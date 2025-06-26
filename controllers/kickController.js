@@ -3,6 +3,7 @@ import { Kick } from "../models/kick.js";
 
 // Save one kick entry
 export const saveKick = async (req, res) => {
+  console.log("hii");
   try {
     const { userId, date, count, time } = req.body;
 
@@ -12,7 +13,7 @@ export const saveKick = async (req, res) => {
 
     const newKick = new Kick({
       userId,
-      date: new Date(date),
+      date, 
       time,
       count,
     });
@@ -34,21 +35,13 @@ export const getKicks = async (req, res) => {
   }
 
   try {
-    const start = new Date(date);
-    start.setHours(0, 0, 0, 0);
-    const end = new Date(date);
-    end.setHours(23, 59, 59, 999);
-
-    const kicks = await Kick.find({
-      userId,
-      date: { $gte: start, $lte: end },
-    }).sort({ date: 1 });
-
+    const kicks = await Kick.find({ userId, date }).sort({ time: 1 });
     res.json(kicks);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
+
 
 // Delete a kick entry by ID
 export const deleteKick = async (req, res) => {
