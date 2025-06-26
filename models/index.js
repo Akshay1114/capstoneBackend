@@ -20,9 +20,13 @@ const userSchema = mongoose.Schema({
   },
   role:{
     type: String,
-    required: true,
-    enum: ['user', 'family']
+    required: true
   },
+  image: {
+    type: String,
+    default: ''
+  },
+  
   isDeleted: {
     type: Boolean,
     default: false

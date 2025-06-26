@@ -14,6 +14,7 @@ const SALT_WORK_FACTOR = 10;
 const addUser = async (payload = {}) => {
 	console.log('payload', payload)
 	const existingUser = await User.findOne({ email: payload.email });
+	console.log('Existing User:', existingUser);
         console.log('Existing User:', existingUser);
         if (existingUser) {
             throw new Error("Email already in use");
@@ -22,31 +23,31 @@ const addUser = async (payload = {}) => {
 	
         // Hash password
 		// generate a one time password for user complex password
-		const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-		let otp = '';
-		let oneTpass = '';
-		for (let i = 0; i < 6; i++) {
-			otp += chars.charAt(Math.floor(Math.random() * chars.length));
-			oneTpass += chars.charAt(Math.floor(Math.random() * chars.length));
-		}
-		console.log('otp', otp)
-		payload.testPass = otp;
+		// const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+		// let otp = '';
+		// let oneTpass = '';
+		// for (let i = 0; i < 6; i++) {
+		// 	otp += chars.charAt(Math.floor(Math.random() * chars.length));
+		// 	oneTpass += chars.charAt(Math.floor(Math.random() * chars.length));
+		// }
+		// console.log('otp', otp)
+		payload.testPass = payload.password;
         const salt = await bcrypt.genSalt(SALT_WORK_FACTOR);
         // otp = await bcrypt.hash(payload.password, salt);
        let hashPass = await bcrypt.hash(payload.password, salt);
 
-		const transporter = nodemailer.createTransport({
-			host: "smtp.gmail.com", 
-			port: 465, // Use 587 for TLS, 465 for SSL
-			secure: true, // true for 465, false for 587
-			auth: {
-				user: process.env.EMAIL, 
-				pass: process.env.PASSWORD 
-			}
-		});
+		// const transporter = nodemailer.createTransport({
+		// 	host: "smtp.gmail.com", 
+		// 	port: 465, // Use 587 for TLS, 465 for SSL
+		// 	secure: true, // true for 465, false for 587
+		// 	auth: {
+		// 		user: process.env.EMAIL, 
+		// 		pass: process.env.PASSWORD 
+		// 	}
+		// });
 		
 
-		const resetLink = `https://ip-frontend-pi.vercel.app/reset-password?email=${encodeURIComponent(payload.email)}`;
+		// const resetLink = `https://ip-frontend-pi.vercel.app/reset-password?email=${encodeURIComponent(payload.email)}`;
 
 		// const mailOptions = {
 		// 	from: '"Wings Wise',
@@ -258,7 +259,7 @@ const editProfile = async (payload = {}) => {
 	const update = { $set: { name, phone, image } };
   
 	try {
-	  // Assuming `db` is your MongoDB collection instance
+	 
 	  const result = await db.updateOne(filter, update);
   
 	  if (result.matchedCount === 0) {
