@@ -10,6 +10,8 @@ import { authRoutes } from './routes/authRoutes.js';
 import { Notification } from './models/notification.js';
 import mongoose from 'mongoose';
 import kickRoutes from "./routes/kickRoutes.js";
+import bpRoutes from "./routes/bpRoutes.js";
+
 
 const app = express();
 const server = http.createServer(app);
@@ -25,6 +27,7 @@ app.use(bodyParser.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/kicks", kickRoutes);
 app.use("/api/", router);
+app.use("/api/bp", bpRoutes);
 
 
 // ✅ Socket.IO Setup
