@@ -4,6 +4,7 @@ import { userController } from '../controllers/index.js';
 import { notificationController } from '../controllers/notificationController.js';
 import { healthController } from '../controllers/healthController.js';
 import { imageController } from '../controllers/imageController.js';
+import { journalController } from '../controllers/journalController.js';
 // import { verifyToken} from './middleware/verifyToken.js'
 
 const router = Router();
@@ -15,6 +16,8 @@ router.use('/user', userController);
 router.use('/uploadImage', imageController)
 
 router.use('/userHealth', healthController)
+
+router.use('/journal', journalController)
 
 router.use('/getNotification', notificationController)
 export { router };
