@@ -1,4 +1,5 @@
-import mongoose from "mongoose";
+// const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const bloodPressureSchema = new mongoose.Schema({
   datetime: { type: String },

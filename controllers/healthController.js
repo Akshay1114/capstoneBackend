@@ -8,24 +8,18 @@ import dotenv from 'dotenv';
 import { saveBP, getBpData } from '../services/health.js';
 dotenv.config();
 
-
 const router = Router();
 
 //Response messages
-const { USER_ADDED, FETCH_USERS, UPDATE_USER, ALREADY_REGISTER, FETCH_USER, DELETE_USER,LOGIN } = responseMessages.EN;
+const { USER_ADDED, FETCH_USERS, UPDATE_USER, ALREADY_REGISTER, FETCH_USER, DELETE_USER, LOGIN } = responseMessages.EN;
 //Response Status code
 const { RECORD_CREATED, RECORD_ALREADY_EXISTS, SUCCESS, BAD_REQUEST } = statusCodes;
-router.get('/', async(req, res) => {
-
-  console.log("ENTER saveUser ==>>")  
+router.get('/', async (req, res) => {
+  console.log("ENTER saveUser ==>>")
 });
 
- 
-router.post('/bp', async(req, res) => {
-  console.log("ENTER saveCrew ==>>");
-  console.log("Request Body:", req.body);
-    
-    saveBP(req.body)
+router.post('/bp', async (req, res) => {
+  saveBP(req.body)
     .then(async user => {
       return makeResponse(
         res,
@@ -43,12 +37,10 @@ router.post('/bp', async(req, res) => {
         error.message
       );
     });
-  });
+});
 
-  router.get('/bp', async(req, res) => {
-    console.log("ENTER getBP ==>>")
-    
-    getBpData(req.query.id)
+router.get('/bp', async (req, res) => {
+  getBpData(req.query.id)
     .then(async data => {
       return makeResponse(
         res,
@@ -66,9 +58,7 @@ router.post('/bp', async(req, res) => {
         error.message
       );
     });
-  }
-  );
+}
+);
 
-
-
-  export const healthController = router;
+export const healthController = router;

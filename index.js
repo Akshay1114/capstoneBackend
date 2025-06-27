@@ -42,8 +42,6 @@ app.use('/api/userHealth', weightController);
 app.use("/api/", router);
 app.use("/api/auth", authRoutes);
 app.use("/api/kicks", kickRoutes);
-app.use("/api/bp", bpRoutes);
-
 
 
 // ✅ Socket.IO Setup
