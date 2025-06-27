@@ -14,12 +14,12 @@ const FIXED_USER_ID = "68363fabfa6e794d7eac980a";
 const { USER_ADDED, FETCH_USERS } = responseMessages.EN;
 const { RECORD_CREATED, RECORD_ALREADY_EXISTS, SUCCESS, BAD_REQUEST } = statusCodes;
 
-// POST /bp with fixed user ID
+// POST /bp - Uses fixed user ID
 router.post('/bp', async (req, res) => {
   console.log("ENTER saveBP ==>>");
   console.log("Request Body (before override):", req.body);
 
-  req.body.userID = FIXED_USER_ID; // ✅ Override with fixed userID
+  req.body.userID = FIXED_USER_ID;
 
   saveBP(req.body)
     .then(async (user) => {
@@ -30,11 +30,11 @@ router.post('/bp', async (req, res) => {
     });
 });
 
-// GET /bp for fixed user ID
+// GET /bp - Uses fixed user ID
 router.get('/bp', async (req, res) => {
   console.log("ENTER getBP ==>>");
 
-  const userID = FIXED_USER_ID; // ✅ Ignore query param, use fixed ID
+  const userID = FIXED_USER_ID;
 
   getBpData(userID)
     .then(async (data) => {

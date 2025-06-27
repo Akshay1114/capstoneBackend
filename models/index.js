@@ -8,30 +8,26 @@ const userSchema = mongoose.Schema({
   },
   email: {
     type: String,
-    required: true
+    required: true,
+    unique: true
   },
-  phone:{
+  phone: {
     type: String,
-    required: true
   },
   password: {
     type: String,
     required: true
   },
-  role:{
-    type: String,
-    required: true
-  },
+  role: { type: String, enum: ["self", "other"], default: "self" },
+
   image: {
     type: String,
     default: ''
   },
-  
   isDeleted: {
     type: Boolean,
     default: false
   },
- 
 }, {
   timestamps: true
 }

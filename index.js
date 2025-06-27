@@ -23,6 +23,8 @@ const app = express();
 const server = http.createServer(app);
 app.use(express.json({ limit: '100mb' }));
 
+connectDB();
+
 // ✅ CORS options
 const corsOptions = {
   origin: '*',
@@ -41,7 +43,6 @@ app.use('/api/userHealth', weightController);
 app.use("/api/", router);
 app.use("/api/auth", authRoutes);
 app.use("/api/kicks", kickRoutes);
-
 
 
 // ✅ Socket.IO Setup
@@ -114,7 +115,7 @@ io.on("connection", (socket) => {
 const PORT = process.env.PORT || 5001;
 console.log('PORT', PORT)
 server.listen(PORT, () => {
-	console.log('Server is listening on port ', PORT);
+  console.log('Server is listening on port ', PORT);
 });
 // -----------------------------------------
 // 🟡 FITBIT OAUTH2 INTEGRATION (COMMENTED)
