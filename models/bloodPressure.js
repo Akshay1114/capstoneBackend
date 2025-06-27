@@ -1,14 +1,11 @@
-// const mongoose = require('mongoose');
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
-const bloodPressureSchema = new mongoose.Schema({
-  userID: { type: String },
-  datetime: { type: String },
-  diastolic: { type: String },
-  status :{ type: String },
-  systolic:{type : String},
+const BloodPressureSchema = new mongoose.Schema({
+  userId: { type: String, required: true },
+  systolic: { type: String, required: true },
+  diastolic: { type: String, required: true },
+  datetime: { type: String, required: true },
+  status: { type: String, required: true },
 });
 
-const BloodPressure = mongoose.model('BloodPressure', bloodPressureSchema);
-
-export {BloodPressure};
+export const BloodPressure = mongoose.model("BloodPressure", BloodPressureSchema);
