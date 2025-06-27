@@ -1,4 +1,4 @@
-import { BloodPressure } from '../models/bloodPressure.js';
+import { bloodPressure } from '../models/bloodPressure.js';
 import { User } from '../models/index.js';
 import dotenv from "dotenv";
 import { JournalData } from '../models/journal.js';

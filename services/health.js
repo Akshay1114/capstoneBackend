@@ -1,4 +1,4 @@
-import { BloodPressure } from '../models/bloodPressure.js';
+import { bloodPressure } from '../models/bloodPressure.js';
 import { User } from '../models/index.js';
 import dotenv from "dotenv";
 
@@ -6,7 +6,7 @@ const saveBP = async (payload = {}) => {
   try {
     const { userID, datetime, diastolic, systolic, status } = payload;
 
-    const bpEntry = new BloodPressure({
+    const bpEntry = new bloodPressure({
       userID,
       datetime,
       diastolic,
@@ -24,7 +24,7 @@ const saveBP = async (payload = {}) => {
 
 const getBpData = async (userID) => {
   try {
-    const bpData = await BloodPressure.find({ userID }).sort({ datetime: -1 });
+    const bpData = await bloodPressure.find({ userID }).sort({ datetime: -1 });
     return bpData;
   } catch (error) {
     console.error('Error fetching blood pressure data:', error);

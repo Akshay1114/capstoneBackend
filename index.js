@@ -10,7 +10,6 @@ import { router } from './routes/index.js';
 import { authRoutes } from './routes/authRoutes.js';
 import { Notification } from './models/notification.js';
 import kickRoutes from "./routes/kickRoutes.js";
-import bpRoutes from "./routes/bpRoutes.js";
 import { healthController } from './controllers/healthController.js';
 import { weightController } from './controllers/weightAnalyse.js';
 // import querystring from 'querystring'; // ❌ remove if unused
@@ -22,7 +21,7 @@ const app = express();
 
 const server = http.createServer(app);
 app.use(express.json({ limit: '100mb' }));
-
+connectDB();
 
 // ✅ CORS options
 const corsOptions = {
