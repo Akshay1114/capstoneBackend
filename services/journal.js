@@ -43,7 +43,7 @@ const saveJournal = async (payload = {}) => {
           });
   
         if (uploadError) {
-          return res.status(500).json({ error: uploadError.message });
+          throw new Error ({ error: uploadError.message });
         }
   
         const { data } = supabase.storage.from('images').getPublicUrl(fileName);
@@ -87,7 +87,7 @@ const getJournal = async (userID) => {
   try {
     const journalData = await JournalData.find({ userID }).sort({ datetime: -1 });
     console.log("journalData", journalData);
-    return journalData;
+    return journalData.reverse();
   } catch (error) {
     console.error('Error fetching blood pressure data:', error);
     throw new Error('Internal server error');
