@@ -6,7 +6,7 @@ const bloodPressureSchema = new mongoose.Schema({
   status: { type: String },
   systolic: { type: String },
   userID: {
-    type: String, // ✅ Accept string ID
+    type: String,
     required: true,
   },
 });
