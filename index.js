@@ -12,6 +12,7 @@ import { Notification } from './models/notification.js';
 import kickRoutes from "./routes/kickRoutes.js";
 import { healthController } from './controllers/healthController.js';
 import { weightController } from './controllers/weightAnalyse.js';
+import mongoose from 'mongoose';
 // import querystring from 'querystring'; // ❌ remove if unused
 
 dotenv.config();
@@ -21,6 +22,7 @@ const app = express();
 
 const server = http.createServer(app);
 app.use(express.json({ limit: '100mb' }));
+
 connectDB();
 
 // ✅ CORS options
@@ -96,19 +98,20 @@ io.on("connection", (socket) => {
 
 
 // mongoose
-//   .connect(process.env.MONGO_URI, {
+//   .connect(process.env.URI, {
 //     useNewUrlParser: true,
 //     useUnifiedTopology: true,
 //   })
 //   .then(() => {
 //     console.log("✅ MongoDB Atlas connected successfully");
-//     server.listen(process.env.PORT || 5000, () => {
-//       console.log("🚀 Server running on port", process.env.PORT || 5000);
+//     server.listen(process.env.PORT || 5001, () => {
+//       console.log("🚀 Server running on port", process.env.PORT || 5001);
 //     });
 //   })
 //   .catch((err) => {
 //     console.error("❌ MongoDB connection error:", err.message);
 //   });
+
 const PORT = process.env.PORT || 5001;
 console.log('PORT', PORT)
 server.listen(PORT, () => {
