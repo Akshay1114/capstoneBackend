@@ -1,42 +1,49 @@
-
+// ✅ Imports
 import express from 'express';
 import cors from 'cors';
 import http from 'http';
 import { Server } from 'socket.io';
 import dotenv from 'dotenv';
-import {connectDB} from './loaders/db/index.js';
-import { router } from './routes/index.js'
 import bodyParser from 'body-parser';
+import { connectDB } from './loaders/db/index.js';
+import { router } from './routes/index.js';
 import { authRoutes } from './routes/authRoutes.js';
 import { Notification } from './models/notification.js';
-import axios from 'axios';
-// import passport from 'passport';
-// import OAuth2Strategy from 'passport-oauth2';
-// const querystring = require('querystring');
-import querystring from 'querystring';
-dotenv.config();
-connectDB()
-import mongoose from 'mongoose';
 import kickRoutes from "./routes/kickRoutes.js";
 import bpRoutes from "./routes/bpRoutes.js";
+import { healthController } from './controllers/healthController.js';
+import { weightController } from './controllers/weightAnalyse.js';
+// import querystring from 'querystring'; // ❌ remove if unused
 
+dotenv.config();
 
+// ✅ App setup
 const app = express();
+
 const server = http.createServer(app);
 app.use(express.json({ limit: '100mb' }));
 
+
+// ✅ CORS options
 const corsOptions = {
   origin: '*',
   methods: 'GET,POST,PUT,DELETE',
   allowedHeaders: 'Content-Type,Authorization',
 };
+
 app.use(cors(corsOptions));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+
+
+app.use('/api/userHealth', weightController);
+
 app.use("/api/", router);
 app.use("/api/auth", authRoutes);
 app.use("/api/kicks", kickRoutes);
 app.use("/api/bp", bpRoutes);
+
 
 
 // ✅ Socket.IO Setup
@@ -90,6 +97,7 @@ io.on("connection", (socket) => {
   });
 });
 
+
 // mongoose
 //   .connect(process.env.MONGO_URI, {
 //     useNewUrlParser: true,
@@ -107,7 +115,7 @@ io.on("connection", (socket) => {
 const PORT = process.env.PORT || 5001;
 console.log('PORT', PORT)
 server.listen(PORT, () => {
-	console.log('Server is listening on port ', PORT);
+  console.log('Server is listening on port ', PORT);
 });
 // -----------------------------------------
 // 🟡 FITBIT OAUTH2 INTEGRATION (COMMENTED)
@@ -173,3 +181,4 @@ server.listen(PORT, () => {
 //     res.status(500).json({ error: 'Failed to obtain access token' });
 //   }
 // });
+
