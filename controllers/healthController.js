@@ -7,20 +7,20 @@ dotenv.config();
 
 const router = Router();
 
-// Constants
-const FIXED_USER_ID = "68363fabfa6e794d7eac980a";
-
 // Response messages
 const { USER_ADDED, FETCH_USERS } = responseMessages.EN;
 const { RECORD_CREATED, RECORD_ALREADY_EXISTS, SUCCESS, BAD_REQUEST } = statusCodes;
 
-// POST /bp - Uses fixed user ID
+// POST /bp - Uses userID from frontend
 router.post('/bp', async (req, res) => {
-  console.log("ENTER saveBP ==>>");
-  console.log("Request Body (before override):", req.body);
+  // Validate userID from frontend
+  const userID = req.body.userID;
+  if (!userID) {
+    return makeResponse(res, BAD_REQUEST, false, "User ID missing in request body.");
+  }
 
-  req.body.userID = FIXED_USER_ID;
-
+  // Proceed to save
+  console.log(req.body,">>");
   saveBP(req.body)
     .then(async (user) => {
       return makeResponse(res, RECORD_CREATED, true, USER_ADDED, user);
@@ -30,11 +30,12 @@ router.post('/bp', async (req, res) => {
     });
 });
 
-// GET /bp - Uses fixed user ID
+// GET /bp - Uses userID from query params sent by frontend
 router.get('/bp', async (req, res) => {
-  console.log("ENTER getBP ==>>");
-
-  const userID = FIXED_USER_ID;
+  const userID = req.query.id;
+  if (!userID) {
+    return makeResponse(res, BAD_REQUEST, false, "User ID missing in query parameters.");
+  }
 
   getBpData(userID)
     .then(async (data) => {
