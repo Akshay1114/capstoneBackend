@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import dotenv from 'dotenv';
-import { saveBP, getBpData } from '../services/health.js';
+import { saveBP, getBpData, deleteBpData } from '../services/health.js';
 import { makeResponse, responseMessages, statusCodes } from '../helpers/response/index.js';
 
 dotenv.config();
@@ -44,6 +44,28 @@ router.get('/bp', async (req, res) => {
     .catch(async (error) => {
       return makeResponse(res, BAD_REQUEST, false, error.message);
     });
+});
+
+// DELETE /bp
+router.delete('/bp', async (req, res) => {
+  const userID = req.query.id;
+  const datetime = req.query.datetime;
+
+  if (!userID || !datetime) {
+    return makeResponse(res, BAD_REQUEST, false, "User ID or datetime missing in query parameters.");
+  }
+
+  try {
+    const result = await deleteBpData(userID, datetime);
+    if (result) {
+      return makeResponse(res, SUCCESS, true, "Record deleted successfully.");
+    } else {
+      return makeResponse(res, BAD_REQUEST, false, "Record not found or could not be deleted.");
+    }
+  } catch (error) {
+    console.error('Error deleting BP:', error);
+    return makeResponse(res, BAD_REQUEST, false, error.message);
+  }
 });
 
 export const healthController = router;

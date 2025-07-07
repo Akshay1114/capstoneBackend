@@ -30,3 +30,14 @@ export const getWeightData = async (userID) => {
     throw new Error('Failed to fetch weight data');
   }
 };
+
+export const deleteWeightData = async (userID, date) => {
+  try {
+    const result = await Weight.deleteOne({ userID, date });
+    console.log(`Attempted Weight delete: userID=${userID}, date=${date}, deletedCount=${result.deletedCount}`);
+    return result.deletedCount > 0;
+  } catch (error) {
+    console.error('Error deleting weight data:', error);
+    throw new Error('Failed to delete weight data.');
+  }
+};
