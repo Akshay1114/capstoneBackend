@@ -43,7 +43,7 @@ const saveJournal = async (payload = {}) => {
           });
   
         if (uploadError) {
-          throw new Error ({ error: uploadError.message });
+            throw new Error ({ error: uploadError.message });
         }
   
         const { data } = supabase.storage.from('images').getPublicUrl(fileName);
