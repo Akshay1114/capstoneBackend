@@ -1,6 +1,4 @@
 import { bloodPressure } from '../models/bloodPressure.js';
-import { User } from '../models/index.js';
-import dotenv from "dotenv";
 
 const saveBP = async (payload = {}) => {
   try {
@@ -31,4 +29,16 @@ const getBpData = async (userID) => {
     throw new Error('Internal server error');
   }
 }
-export { saveBP, getBpData };
+
+const deleteBpData = async (userID, datetime) => {
+  try {
+    const result = await bloodPressure.deleteOne({ userID, datetime });
+    console.log(`Attempted BP delete: userID=${userID}, datetime=${datetime}, deletedCount=${result.deletedCount}`);
+    return result.deletedCount > 0;
+  } catch (error) {
+    console.error('Error deleting BP data:', error);
+    throw new Error('Failed to delete BP data.');
+  }
+};
+
+export { saveBP, getBpData, deleteBpData };
