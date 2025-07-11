@@ -1,27 +1,17 @@
-import { Router } from 'express';
-import dotenv from 'dotenv';
-dotenv.config()
-import { userController } from '../controllers/index.js';
-import { notificationController } from '../controllers/notificationController.js';
+// routes/index.js
+import express from 'express';
+import userRoutes from '../controllers/index.js';
 import { healthController } from '../controllers/healthController.js';
 import { imageController } from '../controllers/imageController.js';
 import { journalController } from '../controllers/journalController.js';
-// import { verifyToken} from './middleware/verifyToken.js'
+import { notificationController } from '../controllers/notificationController.js';
 
-const router = Router();
+const router = express.Router();
 
-router.use('/user', userController);
-// router.use('/v1', verifyToken)
-// use /v1 for user authientication and authorization
+router.use('/user', userRoutes);
+router.use('/userHealth', healthController);
+router.use('/uploadImage', imageController);
+router.use('/journal', journalController);
+router.use('/getNotification', notificationController);
 
-router.use('/uploadImage', imageController)
-
-router.use('/userHealth', healthController)
-
-router.use('/journal', journalController)
-
-router.use('/getNotification', notificationController)
-export { router };
-
-//  LOG  Weight entry added: {"date": "2025-06-19", "unit": "kg", "value": "120"}
-//  LOG  All weight entry keys: ["value", "unit", "date"]
+export default router; // ✅ default export

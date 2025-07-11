@@ -238,7 +238,7 @@ const changePassword = async (payload = {}) => {
 // get profile
 const getProfile = async (payload = {}) => {
 	const getData = await User.findOne({
-		email: payload.email
+		_id: payload.id
 	})
 	if (!getData) {
 		throw new Error("User not found");
@@ -278,83 +278,6 @@ const editProfile = async (payload = {}) => {
   };
 
 const getCrewSchedule = async (payload = {}) => {
-	// const crewData = await CrewSchedule.find(
-	// 	{ employee_ID: payload }
-	// );
-	// const crewData = await CrewSchedule.aggregate([
-	// 	{
-	// 	  $match: { employee_ID: payload } // Find crew schedules for the given employee
-	// 	},
-	// 	{
-	// 	  $lookup: {
-	// 		from: "flightschedules", // Collection name in MongoDB
-	// 		localField: "assignedFlights", // Field in CrewSchedule (array)
-	// 		foreignField: "flightId", // Field in FlightSchedule
-	// 		as: "flightDetails" // Name of the joined data
-	// 	  }
-	// 	}
-	//   ]);
-	// const crewData = await CrewSchedule.aggregate([
-	// 	{
-	// 	  $match: { employee_ID: payload } // Filter crew data for the given employee
-	// 	},
-	// 	{
-	// 	  $lookup: {
-	// 		from: "flightschedules", // Collection for flight schedules
-	// 		localField: "assignedFlights", // Field in CrewSchedule (array)
-	// 		foreignField: "flightId", // Field in FlightSchedule
-	// 		as: "flightScheduleDetails" // Stores matched flight schedule data
-	// 	  }
-	// 	},
-	// 	{
-	// 	  $lookup: {
-	// 		from: "flights", // Collection for flight data
-	// 		localField: "assignedFlights", // Field in CrewSchedule (array)
-	// 		foreignField: "flightId", // Field in Flight
-	// 		as: "flightDetails" // Stores matched flight data
-	// 	  }
-	// 	},
-	// 	{
-	// 	  $project: {
-	// 		_id: 1,
-	// 		employee_ID: 1,
-	// 		assignedFlights: 1,
-	// 		mergedFlights: {
-	// 		  $map: {
-	// 			input: "$assignedFlights",
-	// 			as: "flightId",
-	// 			in: {
-	// 			  flightId: "$$flightId",
-	// 			  flightSchedule: {
-	// 				$arrayElemAt: [
-	// 				  {
-	// 					$filter: {
-	// 					  input: "$flightScheduleDetails",
-	// 					  as: "fs",
-	// 					  cond: { $eq: ["$$flightId", "$$fs.flightId"] }
-	// 					}
-	// 				  },
-	// 				  0
-	// 				]
-	// 			  },
-	// 			  flightData: {
-	// 				$arrayElemAt: [
-	// 				  {
-	// 					$filter: {
-	// 					  input: "$flightDetails",
-	// 					  as: "f",
-	// 					  cond: { $eq: ["$$flightId", "$$f.flightId"] }
-	// 					}
-	// 				  },
-	// 				  0
-	// 				]
-	// 			  }
-	// 			}
-	// 		  }
-	// 		}
-	// 	  }
-	// 	}
-	//   ]);
 	return crewData;	
 }
 

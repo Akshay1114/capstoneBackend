@@ -6,7 +6,8 @@ import { Server } from 'socket.io';
 import dotenv from 'dotenv';
 import bodyParser from 'body-parser';
 import { connectDB } from './loaders/db/index.js';
-import { router } from './routes/index.js';
+// import { router } from './routes/index.js';
+import router from './routes/index.js'; // ✅ correct
 import { authRoutes } from './routes/authRoutes.js';
 import { Notification } from './models/notification.js';
 import kickRoutes from "./routes/kickRoutes.js";
@@ -119,70 +120,6 @@ console.log('PORT', PORT)
 server.listen(PORT, () => {
   console.log('Server is listening on port ', PORT);
 });
-// -----------------------------------------
-// 🟡 FITBIT OAUTH2 INTEGRATION (COMMENTED)
-// -----------------------------------------
-
-// Redirect user to Fitbit for authentication
-// app.get('/auth/fitbit', (req, res) => {
-//   const authUrl = `https://www.fitbit.com/oauth2/authorize?${querystring.stringify({
-//     response_type: 'code',
-//     client_id: process.env.FITBIT_CLIENT_ID,
-//     redirect_uri: process.env.FITBIT_REDIRECT_URI,
-//     scope: ['sleep', 'activity', 'heartrate', 'profile'],
-//   })}`;
-//   res.redirect(authUrl);
-// });
-
-// Fitbit callback route: exchanges code for token and fetches sleep data
-// app.get('/auth/fitbit/callback', async (req, res) => {
-//   const { code } = req.query;
-//   if (!code) return res.status(400).json({ error: 'Authorization code not found' });
-
-//   try {
-//     const tokenResponse = await axios.post('https://api.fitbit.com/oauth2/token',
-//       querystring.stringify({
-//         client_id: process.env.FITBIT_CLIENT_ID,
-//         client_secret: process.env.FITBIT_CLIENT_SECRET,
-//         grant_type: 'authorization_code',
-//         redirect_uri: process.env.FITBIT_REDIRECT_URI,
-//         code: code,
-//       }),
-//       {
-//         headers: {
-//           'Content-Type': 'application/x-www-form-urlencoded',
-//           'Authorization': `Basic ${Buffer.from(`${process.env.FITBIT_CLIENT_ID}:${process.env.FITBIT_CLIENT_SECRET}`).toString('base64')}`
-//         }
-//       }
-//     );
-
-//     const { access_token, refresh_token } = tokenResponse.data;
-
-//     // 🗓 Calculate date range: last 7 days
-//     const today = new Date();
-//     const sevenDaysAgo = new Date();
-//     sevenDaysAgo.setDate(today.getDate() - 6);
-
-//     const startDate = sevenDaysAgo.toISOString().split('T')[0];
-//     const endDate = today.toISOString().split('T')[0];
-
-//     // Step 3: Fetch sleep data for date range
-//     const sleepResponse = await axios.get(
-//       `https://api.fitbit.com/1.2/user/-/sleep/date/${startDate}/${endDate}.json`,
-//       { headers: { Authorization: `Bearer ${access_token}` } }
-//     );
-
-//     res.json({
-//       sleepData: sleepResponse.data,
-//       accessToken: access_token,
-//       refreshToken: refresh_token
-//     });
-
-//   } catch (error) {
-//     console.error('❌ Error getting Fitbit data:', error.response?.data || error.message);
-//     res.status(500).json({ error: 'Failed to obtain access token' });
-//   }
-// });
 
 app.post('/api/chatWithBot', async (req, res) => {
   const { message } = req.body;
@@ -197,9 +134,15 @@ app.post('/api/chatWithBot', async (req, res) => {
       {
         model: 'llama3-70b-8192',
         messages: [
-          { role: 'system', content: 'You are a helpful assistant.' },
+          {
+            role: 'system',
+            content:
+              'You are a helpful and medically knowledgeable assistant specialized in pregnancy. Always respond in 3 to 4 concise lines with accurate, friendly, and relevant advice. Avoid long paragraphs.',
+          },
           { role: 'user', content: message }
-        ]
+        ],
+        max_tokens: 200,
+        temperature: 0.7,
       },
       {
         headers: {
