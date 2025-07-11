@@ -143,37 +143,25 @@ router.post('/login', async (req, res) => {
 });
 
 //userProfile
-router.post('/userProfile', async (req, res) => {
-  console.log("ENTER HERE IN USER PROFILE")
-  try{
-    console.log(req.body)
-    getProfile(req.body)
-      .then(async user => {
-        return makeResponse(
-          res,
-          RECORD_CREATED,
-          true,
-          FETCH_USERS,
-          user
-        );
-      })
-      .catch(async error => {
-        return makeResponse(
-          res,
-          RECORD_ALREADY_EXISTS,
-          false,
-          error.message
-        );
-      });
-  } catch (error) {
-    return makeResponse(
-      res,
-      RECORD_ALREADY_EXISTS,
-      false,
-      error.message
-    );
+router.get('/userProfile', async (req, res) => {
+  console.log("ENTER HERE IN USER PROFILE");
+  const { id } = req.query;
+  console.log('id', id)
+  if (!id) {
+    return makeResponse(res, 400, false, "User ID is required");
   }
-})
+
+  try {
+    const user = await getProfile({ id: id });
+    console.log("user", user)
+    if (!user) return makeResponse(res, 400, false, "User not found");
+      console.log("User fetched successfully", user);
+    return makeResponse(res, 200, true, "User fetched", user);
+  } catch (error) {
+    return makeResponse(res, 400, false, error.message);
+  }
+});
+
 
 router.post('/editProfile', async (req, res) => {
   console.log("ENTER HERE IN EDIT PROFILE")
@@ -318,27 +306,7 @@ router.put("/:id", (req, res) => {
     });
 });
 
-//Get user by Id
-router.get("/:id", async (req, res) => {
-  const { id } = req.params;
-  findUserById({ _id: id })
-    .then(user => {
-      return makeResponse(
-        res,
-        SUCCESS,
-        true,
-        FETCH_USER,
-        user
-      );
-    })
-    .catch(async (error) => {
-      return makeResponse(
-        res,
-        BAD_REQUEST,
-        false, error.message
-      );
-    });
-});
+
 
 
 //Find all user
@@ -381,6 +349,27 @@ router.get("/", (req, res) => {
     });
 });
 
+// Get user profile by ID
+router.get('/userProfile', async (req, res) => {
+  console.log("ENTER HERE IN GET USER PROFILE");
+
+  const { id } = req.query; // assuming you'll send user ID in query
+
+  if (!id) {
+    return makeResponse(res, BAD_REQUEST, false, "User ID is required");
+  }
+
+   try {
+    const user = await getProfile({ _id: id }); // adjust based on your DB query structure
+    if (!user) {
+      return makeResponse(res, BAD_REQUEST, false, "User not found");
+    }
+    return makeResponse(res, SUCCESS, true, FETCH_USER, user);
+  } catch (error) {
+    return makeResponse(res, BAD_REQUEST, false, error.message);
+  }
+});
+
 //Delete User
 router.delete("/:id", (req, res) => {
   const { id } = req.params;
@@ -404,4 +393,30 @@ router.delete("/:id", (req, res) => {
 });
 
 
-export const userController = router;
+//Get user by Id
+router.get("/:id", async (req, res) => {
+  const { id } = req.params;
+  findUserById({ _id: id })
+    .then(user => {
+      return makeResponse(
+        res,
+        SUCCESS,
+        true,
+        FETCH_USER,
+        user
+      );
+    })
+    .catch(async (error) => {
+      return makeResponse(
+        res,
+        BAD_REQUEST,
+        false, error.message
+      );
+    });
+});
+
+
+// export const userController = router;
+export default router;
+
+
