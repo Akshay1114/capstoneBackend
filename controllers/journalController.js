@@ -18,7 +18,7 @@ const { RECORD_CREATED, RECORD_ALREADY_EXISTS, SUCCESS, BAD_REQUEST } = statusCo
 
 router.post('/', async(req, res) => {
 
-  console.log("ENTER saveCrew ==>>")
+  console.log("ENTER SAVE AND UPDATE JOURNAL ==>>")
   
   saveJournal(req.body)
   .then(async user => {
