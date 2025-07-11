@@ -104,4 +104,17 @@ const getJournalById = async (userID) => {
     throw new Error('Internal server error');
   }
 }
-export { getJournal, saveJournal, getJournalById };
+const getJournalFamilyCode = async (familyCode) => {
+  try {
+    const getUser = await User.findOne({ familyCode });
+    let newId = getUser._id;
+    // console.log("getUser", getUser);
+    const journalData = await JournalData.find({ userID:newId }).sort({ datetime: -1 });
+    console.log("journalData", journalData);
+    return journalData.reverse();
+  } catch (error) {
+    console.error('Error fetching blood pressure data:', error);
+    throw new Error('Internal server error');
+  }
+}
+export { getJournal, saveJournal, getJournalById, getJournalFamilyCode };

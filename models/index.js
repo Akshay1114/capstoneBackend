@@ -28,6 +28,9 @@ const userSchema = mongoose.Schema({
     type: Boolean,
     default: false
   },
+  familyCode: {
+    type: String,
+  },
 }, {
   timestamps: true
 }

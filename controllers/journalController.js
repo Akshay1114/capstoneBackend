@@ -5,7 +5,7 @@ import fs from 'fs';
 import { User } from '../models/index.js';
 
 import dotenv from 'dotenv';
-import { getJournal, saveJournal, getJournalById } from '../services/journal.js';
+import { getJournal, saveJournal, getJournalById, getJournalFamilyCode } from '../services/journal.js';
 dotenv.config();
 
 
@@ -68,6 +68,29 @@ router.get('/byId', async(req, res) => {
   console.log("ENTER getBP ==>>", req.query.id)
   
   getJournalById(req.query.id)
+  .then(async data => {
+    return makeResponse(
+      res,
+      SUCCESS,
+      true,
+      FETCH_USERS,
+      data
+    );
+  })
+  .catch(async error => {
+    return makeResponse(
+      res,
+      BAD_REQUEST,
+      false,
+      error.message
+    );
+  });
+}
+);
+router.get('/familyCode', async(req, res) => {
+  console.log("ENTER getBP ==>>", req.query.id)
+  
+  getJournalFamilyCode(req.query.id)
   .then(async data => {
     return makeResponse(
       res,

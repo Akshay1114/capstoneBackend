@@ -4,19 +4,48 @@ import jwt from "jsonwebtoken";
 import { User } from "../models/index.js";
 
 export const signup = async (req, res) => {
-  const { name, email, password, role } = req.body;
+  console.log("req.body", req.body);
+  let { name, email, password, role, familyCode } = req.body;
 
   try {
     const existing = await User.findOne({ email });
     if (existing) return res.status(400).json({ message: "Email already exists" });
-
+  
+    // Only generate a familyCode if it's not provided
+    if (!familyCode) {
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  
+      const generateCode = () => {
+        let result = '';
+        for (let i = 0; i < 7; i++) {
+          const randomIndex = Math.floor(Math.random() * chars.length);
+          result += chars[randomIndex];
+        }
+        return result;
+      };
+  
+      // Keep generating until it's unique in the DB
+      let isUnique = false;
+      while (!isUnique) {
+        const code = generateCode();
+        const existingCode = await User.findOne({ familyCode: code });
+        if (!existingCode) {
+          familyCode = code;
+          isUnique = true;
+        }
+      }
+    }
+  
     const hashedPassword = await bcrypt.hash(password, 10);
-    await User.create({ name, email, password: hashedPassword, role });
-
-    res.status(201).json({ message: "User created successfully" });
+  
+    await User.create({ name, email, password: hashedPassword, role, familyCode });
+  
+    res.status(201).json({ message: "User created successfully",name, email, role, familyCode });
+  
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
+  
 };
 
 export const login = async (req, res) => {
@@ -33,7 +62,7 @@ export const login = async (req, res) => {
 
     res.status(200).json({
       token,
-      user: { id: user._id, name: user.name, email: user.email, role: user.role },
+      user: { id: user._id, name: user.name, email: user.email, role: user.role, familyCode: user.familyCode, image: user.image },
     });
   } catch (err) {
     res.status(500).json({ message: err.message });
