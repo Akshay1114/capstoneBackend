@@ -1,4 +1,5 @@
 import { bloodPressure } from '../models/bloodPressure.js';
+import { Weight } from '../models/weight.js'
 
 const saveBP = async (payload = {}) => {
   try {
@@ -29,6 +30,22 @@ const getBpData = async (userID) => {
     throw new Error('Internal server error');
   }
 }
+const healthDataForFamily = async (userID) => {
+  try {
+    const getUser = await User.findOne({ familyCode });
+    let newId = getUser._id;
+
+    const bpData = await bloodPressure.find({ userID:newId }).sort({ datetime: -1 });
+    const weightData = await Weight.find({ userID:newId }).sort({ datetime: -1 });
+    return {
+      bloodPressure: bpData,
+      weight: weightData,
+    };
+  } catch (error) {
+    console.error('Error fetching blood pressure data:', error);
+    throw new Error('Internal server error');
+  }
+}
 
 const deleteBpData = async (userID, datetime) => {
   try {
@@ -41,4 +58,4 @@ const deleteBpData = async (userID, datetime) => {
   }
 };
 
-export { saveBP, getBpData, deleteBpData };
+export { saveBP, getBpData, deleteBpData, healthDataForFamily };

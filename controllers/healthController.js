@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import dotenv from 'dotenv';
-import { saveBP, getBpData, deleteBpData } from '../services/health.js';
+import { saveBP, getBpData, deleteBpData, healthDataForFamily } from '../services/health.js';
 import { makeResponse, responseMessages, statusCodes } from '../helpers/response/index.js';
 
 dotenv.config();
@@ -38,6 +38,20 @@ router.get('/bp', async (req, res) => {
   }
 
   getBpData(userID)
+    .then(async (data) => {
+      return makeResponse(res, SUCCESS, true, FETCH_USERS, data);
+    })
+    .catch(async (error) => {
+      return makeResponse(res, BAD_REQUEST, false, error.message);
+    });
+});
+router.get('/healthDataForFamily', async (req, res) => {
+  const userID = req.query.id;
+  if (!userID) {
+    return makeResponse(res, BAD_REQUEST, false, "User ID missing in query parameters.");
+  }
+
+  healthDataForFamily(userID)
     .then(async (data) => {
       return makeResponse(res, SUCCESS, true, FETCH_USERS, data);
     })
