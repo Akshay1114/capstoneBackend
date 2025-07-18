@@ -4,17 +4,18 @@ import jwt from "jsonwebtoken";
 import { User } from "../models/index.js";
 
 export const signup = async (req, res) => {
-  console.log("req.body", req.body);
-  let { name, email, password, role, familyCode } = req.body;
+  console.log("req.body user signup", req.body);
+  let { name, email, password, role, familyCode, nickName,
+    dueDate, } = req.body;
 
   try {
     const existing = await User.findOne({ email });
     if (existing) return res.status(400).json({ message: "Email already exists" });
-  
+
     // Only generate a familyCode if it's not provided
     if (!familyCode) {
       const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-  
+
       const generateCode = () => {
         let result = '';
         for (let i = 0; i < 7; i++) {
@@ -23,7 +24,7 @@ export const signup = async (req, res) => {
         }
         return result;
       };
-  
+
       // Keep generating until it's unique in the DB
       let isUnique = false;
       while (!isUnique) {
@@ -35,17 +36,17 @@ export const signup = async (req, res) => {
         }
       }
     }
-  
+
     const hashedPassword = await bcrypt.hash(password, 10);
-  
-    await User.create({ name, email, password: hashedPassword, role, familyCode });
-  
-    res.status(201).json({ message: "User created successfully",name, email, role, familyCode });
-  
+
+    await User.create({ name, email, password: hashedPassword, role, familyCode, nickName, familyCode, dueDate });
+
+    res.status(201).json({ message: "User created successfully", name, email, role, familyCode, dueDate, nickName });
+
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
-  
+
 };
 
 export const login = async (req, res) => {
