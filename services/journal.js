@@ -84,6 +84,90 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 //     return ({ error: 'Internal server error' });
 //   }
 // }
+
+// >>>
+// const saveJournal = async (payload = {}) => {
+//   try {
+//     const {
+//       images,
+//       journalId,
+//       userID,
+//       title,
+//       designTemplate,
+//     } = payload;
+
+//     if (!Array.isArray(images) || images.length === 0) {
+//       throw new Error("No images provided");
+//     }
+
+//     const uploadedImages = [];
+
+//     for (const img of images) {
+//       // ✅ SKIP upload if already uploaded (has a URL)
+//       if (img.url) {
+//         uploadedImages.push({
+//           url: img.url,
+//           description: img.description || "",
+//           addedAt: new Date(),
+//         });
+//         continue;
+//       }
+
+//       // ✅ Only upload if base64 image is present (new upload)
+//       const { base64, fileName, contentType, description } = img;
+
+//       if (!base64 || !fileName || !contentType) {
+//         throw new Error("Missing image parameters for new upload");
+//       }
+
+//       const buffer = Buffer.from(base64, "base64");
+
+//       const { error: uploadError } = await supabase.storage
+//         .from("images")
+//         .upload(fileName, buffer, {
+//           contentType,
+//           upsert: false,
+//         });
+
+//       if (uploadError) {
+//         throw new Error(uploadError.message);
+//       }
+
+//       const { data } = supabase.storage.from("images").getPublicUrl(fileName);
+
+//       uploadedImages.push({
+//         url: data.publicUrl,
+//         description,
+//         addedAt: new Date(),
+//       });
+//     }
+
+//     if (journalId) {
+//       // ✅ UPDATE existing journal with new + existing images
+//       await JournalData.updateOne(
+//         { _id: journalId },
+//         { $push: { images: { $each: uploadedImages } } }
+//       );
+
+//       return { message: "Images added to existing journal" };
+//     } else {
+//       // ✅ CREATE new journal
+//       const newJournal = new JournalData({
+//         userID,
+//         title,
+//         designTemplate,
+//         images: uploadedImages,
+//       });
+
+//       await newJournal.save();
+//       return { message: "Journal created successfully", journal: newJournal };
+//     }
+//   } catch (error) {
+//     console.error("UPDATING AND SAVING JOURNAL:", error.message || error);
+//     return { error: error.message || "Internal server error" };
+//   }
+// };
+
 const saveJournal = async (payload = {}) => {
   try {
     const {
@@ -141,14 +225,28 @@ const saveJournal = async (payload = {}) => {
     }
 
     if (journalId) {
-      // ✅ UPDATE existing journal with new + existing images
-      await JournalData.updateOne(
-        { _id: journalId },
-        { $push: { images: { $each: uploadedImages } } }
-      );
-
-      return { message: "Images added to existing journal" };
-    } else {
+      // ✅ Replace the full image array with what frontend sends
+      const journal = await JournalData.findById(journalId);
+      if (!journal) throw new Error("Journal not found");
+    
+      // Build final updated image list from the incoming image URLs (both edited and new)
+      const updatedImages = [];
+    
+      for (const img of images) {
+        if (img.url) {
+          updatedImages.push({
+            url: img.url,
+            description: img.description || "",
+            addedAt: new Date(), // optional: reuse previous addedAt if you want
+          });
+        }
+      }
+    
+      journal.images = updatedImages;
+      await journal.save();
+    
+      return { message: "Journal updated successfully", journal };
+    }else {
       // ✅ CREATE new journal
       const newJournal = new JournalData({
         userID,
@@ -165,7 +263,6 @@ const saveJournal = async (payload = {}) => {
     return { error: error.message || "Internal server error" };
   }
 };
-
 
 const getJournal = async (userID) => {
   try {
