@@ -5,6 +5,7 @@ import { User } from "../models/index.js";
 // const { OAuth2Client } = require("google-auth-library"); // Adjust path as per your project
 import { OAuth2Client } from "google-auth-library";
 import axios from "axios";
+import qs from "qs";
 
 export const signup = async (req, res) => {
   console.log("req.body user signup", req.body);
@@ -80,44 +81,32 @@ const client = new OAuth2Client(
 );
 
 export const googleLogin = async (req, res) => {
-  const { code } = req.body;
-
+  const { id_token } = req.body;
+  console.log("Google Login ID Token:", id_token);
   try {
-    // Step 1: Exchange authorization code for access and ID tokens
-    const tokenResponse = await axios.post("https://oauth2.googleapis.com/token", {
-      code,
-      client_id: "88587075672-l7tj82q29ipc4lspct2mtqucup3ko1rk.apps.googleusercontent.com",
-      client_secret: process.env.APP_SECRET, // put this in .env
-      redirect_uri: "https://auth.expo.io/@khushpreet/capstonefrontend", // update this
-      grant_type: "authorization_code",
-    });
-
-    
-
-    const { id_token } = tokenResponse.data;
-
-    // Step 2: Verify the ID token
     const ticket = await client.verifyIdToken({
       idToken: id_token,
-      audience: "88587075672-l7tj82q29ipc4lspct2mtqucup3ko1rk.apps.googleusercontent.com",
+      audience: [
+        "88587075672-l7tj82q29ipc4lspct2mtqucup3ko1rk.apps.googleusercontent.com", // web
+        "88587075672-ahh9ek707daft1bukgpf69qaki33dp13.apps.googleusercontent.com", // iOS
+        "88587075672-luumg658dj3akni6vucibec9j1c718hv.apps.googleusercontent.com", // Android
+        "88587075672-l7tj82q29ipc4lspct2mtqucup3ko1rk.apps.googleusercontent.com", // Expo Go (same as web in this case)
+      ],
     });
 
     const payload = ticket.getPayload();
     const { email, name, sub } = payload;
 
-    // Step 3: Create or find the user
     let user = await User.findOne({ email });
-
     if (!user) {
       user = await User.create({
         email,
         name,
         googleId: sub,
-        role: "user",
+        role: "self",
       });
     }
 
-    // Step 4: Return JWT
     const jwtToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "7d",
     });
