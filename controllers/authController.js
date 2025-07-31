@@ -87,10 +87,10 @@ export const googleLogin = async (req, res) => {
     const ticket = await client.verifyIdToken({
       idToken: id_token,
       audience: [
-        "88587075672-l7tj82q29ipc4lspct2mtqucup3ko1rk.apps.googleusercontent.com", // web
-        "88587075672-ahh9ek707daft1bukgpf69qaki33dp13.apps.googleusercontent.com", // iOS
-        "88587075672-luumg658dj3akni6vucibec9j1c718hv.apps.googleusercontent.com", // Android
-        "88587075672-l7tj82q29ipc4lspct2mtqucup3ko1rk.apps.googleusercontent.com", // Expo Go (same as web in this case)
+        "88587075672-l7tj82q29ipc4lspct2mtqucup3ko1rk.apps.googleusercontent.com", 
+        "88587075672-ahh9ek707daft1bukgpf69qaki33dp13.apps.googleusercontent.com", 
+        "88587075672-luumg658dj3akni6vucibec9j1c718hv.apps.googleusercontent.com", 
+        "88587075672-l7tj82q29ipc4lspct2mtqucup3ko1rk.apps.googleusercontent.com", 
       ],
     });
 

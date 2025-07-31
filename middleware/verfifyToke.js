@@ -27,17 +27,7 @@ const verifyToken =async(req, res,next)=> {
             return res.status(401).send({message:"User not found"});
           }
           console.log(decoded_token)
-        //   let  shop = decoded_token.shop
-          
-        //   let  customer_access_token = decoded_token.customer_access_token
-        //   let  customer_mail = decoded_token.customer_mail
-        //   let  customer_id = decoded_token.customer_id
-        //   req.session = {
-        //     shop: shop,
-        //     customer_access_token: customer_access_token,
-        //     customer_mail,
-        //     customer_id
-        //   }
+        
            next();
         }else{
           console.log("enter in else")
